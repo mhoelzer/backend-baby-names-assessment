@@ -10,6 +10,9 @@
 # Google's Python Class
 # http://code.google.com/edu/languages/google-python-class/
 
+__author__ = "mhoelzer"
+
+
 import sys
 import re
 import argparse
