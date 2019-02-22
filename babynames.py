@@ -49,6 +49,17 @@ def extract_names(filename):
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
     # +++your code here+++
+    with open(filename, "r") as opened_file:
+        info = opened_file.read()
+        # (P.+n )(\d\d\d\d)
+        # (Popularity in )(\d\d\d\d)
+        # (<.*?>)(P.+n )(\d\d\d\d)(<\/.*?>)
+        year_line = re.search(r"(Popularity\sin\s)(\d\d\d\d)", info)
+        year_isolated = year_line.group(1)
+        name_line = re.search(r"<td>(\d)</td><td>(\w+)</td><td>(\w+)</td>", info)
+        name_isolated = name_line.group()
+        print(year_isolated)
+        # return year_isolated
     return
 
 
@@ -66,19 +77,17 @@ def create_parser():
 def main():
     parser = create_parser()
     args = parser.parse_args()
-
     if not args:
         parser.print_usage()
         sys.exit(1)
-
     file_list = args.files
-
     # option flag
     create_summary = args.summaryfile
-
     # +++your code here+++
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
+    # for filename in file_list:
+    #     print(create_summary)
 
 
 if __name__ == '__main__':
