@@ -60,7 +60,7 @@ $ grep 'Emily ' *.summary
 ```
 
 Regular expression hints
-- year:  `r'Popularity\sin\s(\d\d\d\d)`
+- year:  `r'Popularity\sin\s(\d\d\d\d)'`
 - names: `r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>'`
 
 ## PR (Pull Request) Workflow for this Assignment

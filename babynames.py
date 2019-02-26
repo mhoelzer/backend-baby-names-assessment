@@ -48,19 +48,50 @@ def extract_names(filename):
     followed by the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
-    # +++your code here+++
+    result = []
     with open(filename, "r") as opened_file:
-        info = opened_file.read()
-        # (P.+n )(\d\d\d\d)
-        # (Popularity in )(\d\d\d\d)
-        # (<.*?>)(P.+n )(\d\d\d\d)(<\/.*?>)
-        year_line = re.search(r"(Popularity\sin\s)(\d\d\d\d)", info)
-        year_isolated = year_line.group(1)
-        name_line = re.search(r"<td>(\d)</td><td>(\w+)</td><td>(\w+)</td>", info)
-        name_isolated = name_line.group()
-        print(year_isolated)
-        # return year_isolated
-    return
+        file_info = opened_file.read()
+    # (P.+n )(\d\d\d\d)
+    # (Popularity in )(\d\d\d\d)
+    # (<.*?>)(P.+n )(\d\d\d\d)(<\/.*?>)
+    year_line = re.search(r"Popularity\sin\s(\d\d\d\d)", file_info)
+    assert year_line  # better be not none and if not, stop; can add description
+    # ^^^ assert statement is used klie a sanity checkpoint to have dude using as debug to see if thins work
+    # ^^^ have even for production just in case but basically gets vcommented out when in prod
+    # ^^^ not for data validation/inputs for params; just for vheckign to see if therre
+    # ^^^ interpreted when in debug only 
+    # if not year_line:
+    #     print("couldnt extract the year")
+    #     return None  # this works on one file at a time, so no forloop to continue
+    year_isolated = year_line.group(1)
+    print("foudn year: {}".format(year_isolated))
+    result.append(year_isolated)
+    name_lines = re.findall(
+        r"<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", file_info)
+    # print(name_lines)
+    names_data = {}
+    for rank, boy, girl in name_lines:
+        # this gets each as their own thing
+        # rank belongs to boy and girl
+        if boy not in names_data:
+            # if not already in there, add
+            names_data[boy] = rank
+        if girl not in names_data:
+            names_data[girl] = rank
+    sorted_names = sorted(names_data.keys())
+    # ^^^ list of names, not dict; gets all the keys, whcih are the names
+    # for line in name_lines:
+    #     rank_isolated = line.group(0)
+    #     boys_name_isolated = "{} {}".format(line.group(1), rank_isolated)
+    #     girls_name_isolated = "{} {}".format(line.group(2), rank_isolated)
+    #     names_data[boys_name_isolated] = rank_isolated
+    #     names_data[girls_name_isolated] = rank_isolated
+    # return year_isolated + sorted(names_data)
+    for name in sorted_names:
+        # going through keys
+        result.append(name + " " + names_data[name])
+    # print(result)
+    return result
 
 
 def create_parser():
@@ -83,11 +114,17 @@ def main():
     file_list = args.files
     # option flag
     create_summary = args.summaryfile
-    # +++your code here+++
     # For each filename, get the names, then either print the text output
     # or write it to a summary file
-    # for filename in file_list:
-    #     print(create_summary)
+    for filename in file_list:
+        data = extract_names(filename)
+        if create_summary:
+            with open("{}.summary".format(filename), "w") as output_file:
+                output_file.write(data)
+        else:
+            print(data)
+    # hardcoded for now
+    # extract_names("baby1990.html")
 
 
 if __name__ == '__main__':
