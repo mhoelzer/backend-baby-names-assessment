@@ -1,3 +1,8 @@
+<p align="center">
+  <img src=logo1.jpg/>
+  <img src=logo2.jpeg/>
+</p>
+
 Baby Names 
 ------------
 
