@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=logo1.jpg/>
+  <img src=logo2.jpeg/>
 </p>
 
 Baby Names 
@@ -77,5 +77,5 @@ Regular expression hints
 7. Your grader will post code review comments inline with your code, in your github account. Be sure to respond to any comments and make requested changes. **RESUBMIT** a new link to your PR after making changes.  This is the code review iteration cycle.
 
 <p align="center">
-  <img src=logo2.jpeg/>
+  <img src=logo1.jpg/>
 </p>
