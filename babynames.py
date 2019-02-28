@@ -15,7 +15,6 @@ __author__ = "mhoelzer"
 
 import sys
 import re
-import collections
 import argparse
 
 """
@@ -45,62 +44,29 @@ Suggested milestones for incremental development:
 
 def extract_names(filename):
     """
-    Given a file name for baby.html, returns a list starting with the year string
-    followed by the name-rank strings in alphabetical order.
+    Given a file name for baby.html, returns a list starting with the year
+    string followed by the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
-    # (P.+n )(\d\d\d\d)
-    # (Popularity\sin\s)(\d\d\d\d)
-    # (<.*?>)(P.+n )(\d\d\d\d)(<\/.*?>)
-
     result = []
     with open(filename, "r") as opened_file:
         file_info = opened_file.read()
-        year_line = re.search(r"Popularity in (\d\d\d\d)", file_info)
+        year_line = re.search(r"Popularity in (\d{4})", file_info)
         if not year_line:
             print("couldnt extract the year")
             return None
         year_isolated = year_line.group(1)
         result.append(year_isolated)
-        name_lines = re.findall(r"<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", file_info)
-        names_data = collections.OrderedDict()
+        name_lines = re.findall(
+            r"<td>(\d{4})</td><td>(\w+)</td><td>(\w+)</td>", file_info)
+        names_data = {}
         for name in name_lines:
             rank_isolated = name[0]
             names_data[name[1]] = rank_isolated
             names_data[name[2]] = rank_isolated
-        # sort_names_data = sorted(names_data.items())
         names_data = sorted(names_data.items())
         for key, value in names_data:
             result.append(key + " " + value)
-    
-    # with open(filename, "r") as opened_file:
-    #     file_info = opened_file.read()
-    # year_line = re.search(r"Popularity in (\d\d\d\d)", file_info)
-    # # assert year_line  # better be not none and if not, stop; can add description
-    # # ^^^ assert statement is used like a sanity checkpoint to have dude using as debug to see if thins work
-    # # ^^^ have even for production just in case but basically gets commented out when in prod
-    # # ^^^ not for data validation/inputs for params; just for checking to see if there
-    # # ^^^ interpreted when in debug only 
-    # if not year_line:
-    #     print("couldnt extract the year")
-    #     return None  # this works on one file at a time, so no forloop to continue
-    # year_isolated = year_line.group(1)
-    # result.append(year_isolated)
-    # name_lines = re.findall(
-    #     r"<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", file_info)
-    # names_data = {}
-    # for rank, boy, girl in name_lines:
-    #     # this gets each as their own thing; rank belongs to boy and girl
-    #     if boy not in names_data:
-    #         # ^^^ if not already in there, add
-    #         names_data[boy] = rank
-    #     if girl not in names_data:
-    #         names_data[girl] = rank
-    # sorted_names = sorted(names_data.keys())
-    # # ^^^ list of names, not dict; gets all the keys, whcih are the names
-    # for name in sorted_names:
-    #     # going through keys
-    #     result.append(name + " " + names_data[name])
     return result
 
 
@@ -109,8 +75,6 @@ def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--summaryfile', help='creates a summary file', action='store_true')
-    # The nargs option instructs the parser to expect 1 or more filenames.
-    # It will also expand wildcards just like the shell, e.g. 'baby*.html' will work.
     parser.add_argument('files', help='filename(s) to parse', nargs='+')
     return parser
 
@@ -122,22 +86,15 @@ def main():
         parser.print_usage()
         sys.exit(1)
     file_list = args.files
-    # option flag
     create_summary = args.summaryfile
-    # For each filename, get the names, then either print the text output
-    # or write it to a summary file
     for filename in file_list:
         data = extract_names(filename)
         textie = "\n".join(data)
         if create_summary:
-            # with open("{}.summary".format(filename), "w") as output_file:
-            fileformat = re.search(r"(baby\d\d\d\d).html", filename)
-            with open("{}_summary.txt".format(fileformat.group(1)), "w") as output_file:
+            with open("{}.summary".format(filename), "w") as output_file:
                 output_file.write(textie)
         else:
             print(data)
-    # hardcoded for testing
-    # extract_names("baby1990.html")
 
 
 if __name__ == '__main__':
