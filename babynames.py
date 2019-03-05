@@ -58,7 +58,7 @@ def extract_names(filename):
         year_isolated = year_line.group(1)
         result.append(year_isolated)
         name_lines = re.findall(
-            r"<td>(\d{4})</td><td>(\w+)</td><td>(\w+)</td>", file_info)
+            r"<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", file_info)
         names_data = {}
         for name in name_lines:
             rank_isolated = name[0]
