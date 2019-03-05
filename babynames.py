@@ -60,10 +60,10 @@ def extract_names(filename):
         name_lines = re.findall(
             r"<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>", file_info)
         names_data = {}
-        for name in name_lines:
-            rank_isolated = name[0]
-            names_data[name[1]] = rank_isolated
-            names_data[name[2]] = rank_isolated
+        for line_portion in name_lines:
+            rank_isolated = line_portion[0]
+            names_data[line_portion[1]] = rank_isolated
+            names_data[line_portion[2]] = rank_isolated
         names_data = sorted(names_data.items())
         for key, value in names_data:
             result.append(key + " " + value)
@@ -74,7 +74,7 @@ def create_parser():
     """Create a cmd line parser object with 2 argument definitions"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--summaryfile', help='creates a summary file', action='store_true')
+        "-s", '--summaryfile', help='creates a summary file', action='store_true')
     parser.add_argument('files', help='filename(s) to parse', nargs='+')
     return parser
 
